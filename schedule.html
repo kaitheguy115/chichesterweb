@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule - Sussex Primary School</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #465cb4;
+            text-align: center;
+        }
+        .schedule-box {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+        th {
+            background-color: #465cb4;
+            color: white;
+            font-weight: 500;
+        }
+        td {
+            cursor: pointer;
+        }
+        td:hover {
+            background-color: #e6e6e6;
+        }
+        tr:nth-child(even) {
+            background-color: #f8f8f8;
+        }
+        .back-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #465cb4;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .back-btn:hover {
+            background-color: #3a4d99;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 30px;
+            border: 1px solid #888;
+            width: 350px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .close:hover {
+            color: #000;
+        }
+        #claimForm {
+            display: flex;
+            flex-direction: column;
+        }
+        #claimForm label {
+            margin-top: 10px;
+            font-weight: 500;
+        }
+        #claimForm input {
+            margin-top: 5px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        #claimForm button {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #465cb4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #claimForm button:hover {
+            background-color: #3a4d99;
+        }
+        .unclaim-btn {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 12px;
+            margin: 2px 2px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .unclaim-btn.hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Teaching Schedule</h1>
+        <div class="schedule-box">
+            <table id="scheduleTable">
+                <thead>
+                    <tr>
+                        <th>Year Group</th>
+                        <th>Monday</th>
+                        <th>Tuesday</th>
+                        <th>Wednesday</th>
+                        <th>Thursday</th>
+                        <th>Friday</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Table rows will be generated dynamically -->
+                </tbody>
+            </table>
+        </div>
+        <a href="staff_dashboard.html" class="back-btn">Back to Dashboard</a>
+    </div>
+
+    <div id="claimModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Claim Lesson</h2>
+            <form id="claimForm">
+                <label for="teacherName">Teacher Name:</label>
+                <input type="text" id="teacherName" required>
+                <label for="roomNumber">Room Number:</label>
+                <input type="text" id="roomNumber" required>
+                <button type="submit">Claim</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            const table = $('#scheduleTable tbody');
+            const modal = $('#claimModal');
+            const closeBtn = $('.close');
+            let selectedCell;
+            const currentUser = localStorage.getItem('loggedInUser');
+
+            function loadSchedule() {
+                const savedSchedule = JSON.parse(localStorage.getItem('schoolSchedule')) || {};
+                table.empty();
+
+                for (let i =7; i <= 11; i++) {
+                    let row = $('<tr>');
+                    let yearGroup;
+                    if (i === 7) {
+                        yearGroup = "ALN";
+                    } else if (i === 8) {
+                        yearGroup = "SF - Soon To Come";
+                    } else {
+                        yearGroup = `Year ${i}`;
+                    }
+                    row.append($('<th>').text(yearGroup));
+                    
+                    for (let j = 1; j <= 5; j++) {
+                        const key = `${i}-${j}`;
+                        const cellData = savedSchedule[key];
+                        let cellContent;
+                        if (cellData) {
+                            cellContent = `Claimed by ${cellData.claimedBy}<br>${cellData.teacher}<br>${cellData.room}<br>`;
+                            const unclaimBtnClass = cellData.claimedBy === currentUser ? '' : 'hidden';
+                            cellContent += `<button class="unclaim-btn ${unclaimBtnClass}" data-key="${key}">Unclaim</button>`;
+                        } else {
+                            cellContent = 'Unclaimed<br>No Room<br>No Teacher';
+                        }
+                        row.append($('<td>').html(cellContent).attr('id', key));
+                    }
+                    table.append(row);
+                }
+            }
+
+            function saveSchedule(key, data) {
+                let savedSchedule = JSON.parse(localStorage.getItem('schoolSchedule')) || {};
+                if (data) {
+                    savedSchedule[key] = { ...data, claimedBy: currentUser };
+                } else {
+                    delete savedSchedule[key];
+                }
+                localStorage.setItem('schoolSchedule', JSON.stringify(savedSchedule));
+            }
+
+            function sendLessonClaimNotification(teacherName, roomNumber) {
+                const username = currentUser;
+                const webhookUrl = 'https://discord.com/api/webhooks/1334971579448168540/JbCosFzz3LwlJzYGpW3588NkkIghBtBPco0ymjXKV6OjzhfzpJOd_nw-dvLxf0sEW4_7';
+                const data = {
+                    content: '<@&1300565275527348244>',
+                    embeds: [{
+                        title: 'Lesson Claimed',
+                        description: `Teaching Name: **${teacherName}**\nRoom: **${roomNumber}**\nClaimed by: **${username}**`,
+                        color: 5814783 // A nice blue color
+                    }]
+                };
+
+                $.ajax({
+                    type: 'POST',
+                    url: webhookUrl,
+                    data: JSON.stringify(data),
+                    contentType: 'application/json',
+                    success: function() {
+                        console.log('Lesson claim notification sent successfully.');
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error sending lesson claim notification:', error);
+                        console.error('Status:', status);
+                        console.error('Response:', xhr.responseText);
+                    }
+                });
+            }
+
+            function sendLessonUnclaimNotification(teacherName, roomNumber, username) {
+                const webhookUrl = 'https://discord.com/api/webhooks/1334971579448168540/JbCosFzz3LwlJzYGpW3588NkkIghBtBPco0ymjXKV6OjzhfzpJOd_nw-dvLxf0sEW4_7';
+                const data = {
+                    content: '<@&1300565275527348244>',
+                    embeds: [{
+                        title: 'Lesson Unclaimed',
+                        description: `Teaching Name: **${teacherName}**\nRoom: **${roomNumber}**\nUnclaimed by: **${username}**`,
+                        color: 16711680 // Red color for unclaim
+                    }]
+                };
+
+                $.ajax({
+                    type: 'POST',
+                    url: webhookUrl,
+                    data: JSON.stringify(data),
+                    contentType: 'application/json',
+                    success: function() {
+                        console.log('Lesson unclaim notification sent successfully.');
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error sending lesson unclaim notification:', error);
+                        console.error('Status:', status);
+                        console.error('Response:', xhr.responseText);
+                    }
+                });
+            }
+
+            loadSchedule();
+
+            table.on('click', 'td', function(e) {
+                if (!$(e.target).hasClass('unclaim-btn')) {
+                    selectedCell = $(this);
+                    const cellData = JSON.parse(localStorage.getItem('schoolSchedule') || '{}')[selectedCell.attr('id')];
+                    if (!cellData || cellData.claimedBy === currentUser) {
+                        modal.css('display', 'block');
+                    } else {
+                        alert('This slot has already been claimed by another user.');
+                    }
+                }
+            });
+
+            table.on('click', '.unclaim-btn', function(e) {
+                e.stopPropagation();
+                const key = $(this).data('key');
+                const cellData = JSON.parse(localStorage.getItem('schoolSchedule') || '{}')[key];
+                if (cellData && cellData.claimedBy === currentUser) {
+                    sendLessonUnclaimNotification(cellData.teacher, cellData.room, currentUser);
+                    saveSchedule(key, null);
+                    loadSchedule();
+                } else {
+                    alert('You can only unclaim slots that you have claimed.');
+                }
+            });
+
+            closeBtn.click(() => modal.css('display', 'none'));
+
+            $(window).click(event => {
+                if (event.target == modal[0]) modal.css('display', 'none');
+            });
+
+            $('#claimForm').submit(function(e) {
+                e.preventDefault();
+                const teacherName = $('#teacherName').val();
+                const roomNumber = $('#roomNumber').val();
+                const key = selectedCell.attr('id');
+                saveSchedule(key, { teacher: teacherName, room: roomNumber });
+                loadSchedule();
+                modal.css('display', 'none');
+                sendLessonClaimNotification(teacherName, roomNumber);
+                this.reset();
+            });
+        });
+
+        function resetTimetable() {
+            localStorage.removeItem('schoolSchedule');
+            loadSchedule();
+        }
+    </script>
+</body>
+</html>

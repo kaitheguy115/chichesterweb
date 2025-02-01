@@ -1,0 +1,389 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Staff Dashboard - Sussex Primary School</title>
+        <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #f0f0f0;
+            }
+            .container {
+                max-width: 1000px;
+                margin: 0 auto;
+                padding: 20px;
+            }
+            h1, h2, h3 {
+                font-family: 'Pacifico', cursive;
+                color: #465cb4;
+                text-align: center;
+            }
+            .welcome-banner {
+                background-color: #465cb4;
+                color: white;
+                padding: 15px;
+                text-align: center;
+                font-size: 1.5em;
+                margin-bottom: 20px;
+                border-radius: 10px;
+            }
+            .dashboard-box {
+                background-color: white;
+                border-radius: 20px;
+                padding: 30px;
+                margin-bottom: 20px;
+                box-shadow: 0 4px 8px rgba(70,92,180,0.2);
+                border: 2px solid #465cb4;
+            }
+            .info-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+            .info-box {
+                background-color: #f9f9f9;
+                border-radius: 10px;
+                padding: 20px;
+                text-align: center;
+                box-shadow: 0 2px 4px rgba(70,92,180,0.1);
+                transition: transform 0.3s ease;
+            }
+            .info-box:hover {
+                transform: translateY(-5px);
+            }
+            .info-box h3 {
+                margin-top: 0;
+            }
+            .info-box a {
+                display: inline-block;
+                margin-top: 10px;
+                padding: 8px 15px;
+                background-color: #465cb4;
+                color: white;
+                text-decoration: none;
+                border-radius: 5px;
+                transition: background-color 0.3s;
+            }
+            .info-box a:hover {
+                background-color: #3a4d99;
+            }
+            .btn {
+                display: block;
+                width: 100px;
+                margin: 20px auto;
+                padding: 10px;
+                background-color: #465cb4;
+                color: white;
+                text-align: center;
+                text-decoration: none;
+                border-radius: 5px;
+                transition: background-color 0.3s;
+            }
+            .btn:hover {
+                background-color: #3a4d99;
+            }
+            .reset-timetable {
+                display: none; /* Hide by default */
+                margin-top: 10px;
+                padding: 5px 10px;
+                background-color: #f44336;
+                color: white;
+                text-decoration: none;
+                border-radius: 3px;
+                font-size: 0.9em;
+            }
+            .modal {
+                display: none;
+                position: fixed;
+                z-index: 1;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                overflow: auto;
+                background-color: rgba(0,0,0,0.4);
+            }
+            .modal-content {
+                background-color: #fefefe;
+                margin: 5% auto;
+                padding: 30px;
+                border: 1px solid #888;
+                width: 90%;
+                max-width: 500px;
+                border-radius: 8px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+            .close {
+                color: #aaa;
+                float: right;
+                font-size: 28px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: color 0.3s;
+            }
+            .close:hover,
+            .close:focus {
+                color: #465cb4;
+                text-decoration: none;
+            }
+            #staffRequestForm {
+                display: flex;
+                flex-direction: column;
+            }
+            #staffRequestForm h2 {
+                color: #465cb4;
+                margin-bottom: 20px;
+                text-align: center;
+            }
+            #staffRequestForm label {
+                margin-top: 10px;
+                margin-bottom: 5px;
+                font-weight: bold;
+                color: #333;
+            }
+            #staffRequestForm input,
+            #staffRequestForm textarea,
+            #staffRequestForm select {
+                margin-bottom: 15px;
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                font-size: 14px;
+                color: #333;
+                transition: border-color 0.3s;
+            }
+            #staffRequestForm input:focus,
+            #staffRequestForm textarea:focus,
+            #staffRequestForm select:focus {
+                outline: none;
+                border-color: #465cb4;
+            }
+            #staffRequestForm textarea {
+                resize: vertical;
+                min-height: 100px;
+            }
+            #staffRequestForm button {
+                align-self: center;
+                padding: 10px 20px;
+                background-color: #465cb4;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 16px;
+                transition: background-color 0.3s;
+            }
+            #staffRequestForm button:hover {
+                background-color: #3a4d99;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="welcome-banner">
+            Welcome to the staff dashboard, <span id="username">User</span>!
+        </div>
+        <div class="container">
+            <div class="dashboard-box">
+                <h2>Quick Access</h2>
+                <div class="info-grid">
+                    <div class="info-box">
+                        <h3>Leadership</h3>
+                        <p>Access leadership resources and communication</p>
+                        <a href="https://discord.gg/uvAyGccTez" target="_blank">Access</a>
+                    </div>
+                    <div class="info-box">
+                        <h3>Staff Requests</h3>
+                        <p>Submit and view staff requests</p>
+                        <a href="#" id="staffRequestBtn">Submit Request</a>
+                    </div>
+                    <div class="info-box">
+                        <h3>Staff Resources</h3>
+                        <p>Access teaching materials and resources</p>
+                        <a href="https://discord.gg/ax9mU3XgK8" target="_blank">Access</a>
+                    </div>
+                    <div class="info-box">
+                        <h3>Schedule</h3>
+                        <p>View and manage your teaching schedule</p>
+                        <a href="schedule.html">Access</a>
+                        <a href="#" class="reset-timetable" id="resetTimetable">Reset Timetable</a>
+                    </div>
+                </div>
+            </div>
+            <a href="#" class="btn" id="logout-btn">Logout</a>
+        </div>
+
+        <!-- Staff Request Modal -->
+        <div id="staffRequestModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <form id="staffRequestForm">
+                    <h2>Submit Staff Request</h2>
+                    <label for="teachingName">Your Current Teaching Name:</label>
+                    <input type="text" id="teachingName" required placeholder="e.g. Mr. Smith">
+                    
+                    <label for="discordUsername">Your Discord Username:</label>
+                    <input type="text" id="discordUsername" required placeholder="e.g. username#1234">
+                    
+                    <label for="robloxUsername">Your Roblox Username:</label>
+                    <input type="text" id="robloxUsername" required placeholder="e.g. RobloxUser123">
+                    
+                    <label for="requestType">Your Request:</label>
+                    <select id="requestType" required>
+                        <option value="">Select...</option>
+                        <option value="Name Change">Name Change</option>
+                        <option value="Department Change">Department Change</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    
+                    <label for="request">Request Details:</label>
+                    <textarea id="request" required placeholder="Please describe your request here..."></textarea>
+                    
+                    <button type="submit">Submit Request</button>
+                </form>
+            </div>
+        </div>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="auth.js"></script>
+        <script>
+            $(document).ready(function() {
+                const loggedInUser = localStorage.getItem('loggedInUser');
+                const isSLT = localStorage.getItem('isSLT') === 'true';
+
+                if (!loggedInUser) {
+                    window.location.href = 'login.html';
+                } else {
+                    $('#username').text(loggedInUser);
+                    if (isSLT) {
+                        $('#resetTimetable').show();
+                    }
+                }
+
+                // Logout functionality
+                $('#logout-btn').click(function(e) {
+                    e.preventDefault();
+                    localStorage.removeItem('loggedInUser');
+                    localStorage.removeItem('isSLT');
+                    window.location.href = 'login.html';
+                });
+
+                // Reset Timetable functionality (only for SLT)
+                $('#resetTimetable').click(function(e) {
+                    e.preventDefault();
+                    if (isSLT) {
+                        if (confirm('Are you sure you want to reset the timetable? This action cannot be undone.')) {
+                            localStorage.removeItem('schoolSchedule');
+                            alert('Timetable has been reset.');
+                            sendTimetableResetNotification(loggedInUser);
+                            if (window.opener && !window.opener.closed) {
+                                window.opener.location.reload();
+                            }
+                        }
+                    } else {
+                        alert('You do not have permission to reset the timetable.');
+                    }
+                });
+
+                // Function to send timetable reset notification
+                function sendTimetableResetNotification(username) {
+                    const webhookUrl = 'https://discord.com/api/webhooks/1299056079203995678/TNjgAk1s1Xhh7kf_f-E9jmrhIbuXMtRt7JZG2AF6Mr3_VUXBuZqDoHdFkSp7RtP11-py';
+                    const data = {
+                        content: '<@&1241834304636588113>',
+                        embeds: [{
+                            title: 'Timetable Reset',
+                            description: `User **${username}** has reset the timetable.`,
+                            color: 16711680 // Red color for alert
+                        }]
+                    };
+
+                    $.ajax({
+                        type: 'POST',
+                        url: webhookUrl,
+                        data: JSON.stringify(data),
+                        contentType: 'application/json',
+                        success: function() {
+                            console.log('Timetable reset notification sent successfully.');
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error sending timetable reset notification:', error);
+                            console.error('Status:', status);
+                            console.error('Response:', xhr.responseText);
+                        }
+                    });
+                }
+
+                // Staff Request Modal functionality
+                const staffRequestModal = $('#staffRequestModal');
+                const staffRequestBtn = $('#staffRequestBtn');
+                const closeBtn = $('.close');
+
+                staffRequestBtn.click(function(e) {
+                    e.preventDefault();
+                    staffRequestModal.css('display', 'block');
+                });
+
+                closeBtn.click(function() {
+                    staffRequestModal.css('display', 'none');
+                });
+
+                $(window).click(function(event) {
+                    if (event.target == staffRequestModal[0]) {
+                        staffRequestModal.css('display', 'none');
+                    }
+                });
+
+                // Handle staff request form submission
+                $('#staffRequestForm').submit(function(e) {
+                    e.preventDefault(); // Prevent the default form submission
+
+                    // Capture the form responses
+                    const teachingName = $('#teachingName').val().trim(); // Get the requester's name
+                    const discordUsername = $('#discordUsername').val().trim(); // Get the Discord username
+                    const robloxUsername = $('#robloxUsername').val().trim(); // Get the Roblox username
+                    const requestType = $('#requestType').val(); // Get the request type
+                    const requestDetails = $('#request').val().trim(); // Get the request details
+
+                    // Check if any required fields are empty
+                    if (!teachingName || !discordUsername || !robloxUsername || !requestType || !requestDetails) {
+                        alert('Please fill in all fields.');
+                        return;
+                    }
+
+                    // Prepare the data to send to the webhook
+                    const data = {
+                        content: `<@&1241834304636588113>`, // Mention a role or user if needed
+                        embeds: [{
+                            title: 'Staff Request Submitted',
+                            description: `**Teaching Name:** ${teachingName}\n**Discord Username:** ${discordUsername}\n**Roblox Username:** ${robloxUsername}\n**Request Type:** ${requestType}\n**Request Details:** ${requestDetails}\n**Submitted by:** ${loggedInUser}`, // Include all responses
+                            color: 5814783 // A nice blue color
+                        }]
+                    };
+
+                    // Send the data to the webhook
+                    $.ajax({
+                        type: 'POST',
+                        url: 'https://discord.com/api/webhooks/1298352238984560781/TIc-FAClbHlKM-LLgxemV7aRUxZ3yPUSjc0nFtaVk2ZuoEq9iSacAIHi4r3tavbeSLGX', // Your webhook URL
+                        data: JSON.stringify(data),
+                        contentType: 'application/json',
+                        success: function() {
+                            console.log('Staff request notification sent successfully.');
+                            alert('Your request has been submitted!'); // Confirmation alert
+                            $('#staffRequestForm')[0].reset(); // Reset the form after submission
+                            staffRequestModal.css('display', 'none'); // Hide the modal
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error sending staff request notification:', error);
+                            console.error('Status:', status);
+                            console.error('Response:', xhr.responseText);
+                            alert('There was an error submitting your request. Please try again.');
+                        }
+                    });
+                });
+            });
+        </script>
+    </body>
+    </html>

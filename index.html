@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chichester Academy Home Page</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+        
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            background-color: #f0f0f0;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .logo {
+            width: 60px;
+            height: 60px;
+            margin-right: 20px;
+        }
+        .school-name {
+            font-family: 'Pacifico', cursive;
+            font-size: 2.5em;
+            color: #333;
+        }
+        .login-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        main {
+            flex: 1;
+            padding: 20px;
+        }
+        .info-box {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        footer {
+            background-color: #f0f0f0;
+            padding: 20px;
+            text-align: center;
+        }
+        .footer-logo {
+            width: 40px;
+            height: 40px;
+            margin: 0 10px;
+        }
+        .carousel {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+        .carousel-inner {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+        .carousel-item {
+            min-width: 100%;
+        }
+        .carousel-item img {
+            width: 100%;
+            height: auto;
+        }
+        .carousel-control {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.5);
+            color: white;
+            padding: 10px;
+            text-decoration: none;
+        }
+        .carousel-control.prev { left: 10px; }
+        .carousel-control.next { right: 10px; }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 300px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="https://cdn.discordapp.com/attachments/1109881173255131167/1297651995515158578/rXkucdB.jpg?ex=6716b418&is=67156298&hm=33c95b363ee0a18d70ddd5d63de5a232178d063ce857d6415869aab109f3c46d&" alt="Sussex Primary School Logo" class="logo">
+        <h1 class="school-name">Chichester Academy</h1>
+        <a href="login.html" class="login-btn">Login</a>
+    </header>
+    
+    <div class="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item"><img src="https://i.ibb.co/nMKMS4dM/Screenshot-2025-01-14-214642.png" alt="School Image 1"></div>
+            <div class="carousel-item"><img src="file:///Users/jacksondavies/Documents/Screenshots/Screenshot%202024-10-21%20at%2007.47.08.png" alt="School Image 2"></div>
+            <div class="carousel-item"><img src="https://cdn.discordapp.com/attachments/1109881173255131167/1297813635762098247/iBALsuP.png?ex=67174aa2&is=6715f922&hm=eb30e8a1819dc023bf2cb18c9c5fe5a932099452c7c6a1bbf625076d0099fc21&" alt="School Image 3"></div>
+        </div>
+        <a href="#" class="carousel-control prev" onclick="moveCarousel(-1)">&#10094;</a>
+        <a href="#" class="carousel-control next" onclick="moveCarousel(1)">&#10095;</a>
+    </div>
+
+    <main>
+        <h2>Welcome to Chichester Academy!</h2>
+        <div class="info-box">
+            <h3>About Our School</h3>   
+            <p>Chichester Academ is a vibrant learning community dedicated to nurturing young minds and fostering academic excellence. Our school provides a supportive environment where students can grow, learn, and thrive.</p>
+            <p>Key Features:</p>
+            <ul>
+                <li>Experienced and passionate teaching staff</li>
+                <li>Modern facilities and resources</li>
+                <li>Diverse extracurricular activities</li>
+                <li>Strong focus on character development</li>
+            </ul>
+        </div>
+    </main>
+    <footer>
+        <a href="https://discord.gg/NyNzcjYWpp" target="_blank">
+            <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png" alt="Discord Logo" class="footer-logo">
+        </a>
+        <a href="https://www.roblox.com/communities/34069329/Pindale-Primary-School#!/about" target="_blank">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Roblox_player_icon_black.svg/1200px-Roblox_player_icon_black.svg.png" alt="Roblox Logo" class="footer-logo">
+        </a>
+    </footer>
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.carousel-item');
+
+        function moveCarousel(direction) {
+            currentSlide += direction;
+            if (currentSlide < 0) currentSlide = slides.length - 1;
+            if (currentSlide >= slides.length) currentSlide = 0;
+            
+            document.querySelector('.carousel-inner').style.transform = `translateX(-${currentSlide * 100}%)`;
+        }
+
+        function openModal() {
+            document.getElementById('loginModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('loginModal').style.display = 'none';
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Login functionality would be implemented on the server side.');
+        });
+
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('loginModal')) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>
