@@ -1,8 +1,8 @@
 {
   "users": [
-    { "username": "Mr J Davies", "password": "webdev123!!", "isSLT": false },
-    { "username": "Mr D Allen", "password": "OneVerySkibidiPassword!", "isSLT": true },
-    { "username": "Mrs M Morris", "password": "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "isSLT": true },
+    { "username": "r.mauri", "password": "mauri@chichester", "isSLT": true },
+    { "username": "t.rhodes", "password": "rhodes@chichester", "isSLT": true },
+    { "username": "d.povey", "password": "povey@chichester", "isSLT": true },
     { "username": "Mr O Dale", "password": "Bobsterbrown02!", "isSLT": true },
     { "username": "Mr S Inspired", "password": "P1X3IMBDAH", "isSLT": true },
     { "username": "Mr J Winter", "password": "Jacksonisadirtyslag", "isSLT": true },
